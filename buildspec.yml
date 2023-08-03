@@ -16,7 +16,7 @@ phases:
     on-failure: ABORT
     commands:
       - echo "Build Test with maven"
-      #- mvn -B package --file pom.xml
+      - ./mvnw clean install -P buildDocker
       - echo "Build all docker image"
       - echo Logging in to Amazon ECR...
       - aws --version
