@@ -1,86 +1,118 @@
-version: '2'
+version: '2.1'
 
 services:
   config-server:
-    image: springcommunity/spring-petclinic-cloud--config-server
+    image: superbero/spring-petclinic-cloud-config-server:latest
     container_name: config-server
-    mem_limit: 512M
     ports:
      - 8888:8888
-
+    environment:
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
+    restart: unless-stopped
+    networks:
+      - petclinic_network
+  
   discovery-server:
-    image: springcommunity/spring-petclinic-cloud-discovery-server
+    image: superbero/spring-petclinic-cloud-discovery-service:latest
     container_name: discovery-server
-    mem_limit: 512M
+    #mem_limit: 1G
     depends_on:
       - config-server
-    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost"]
+    #   interval: 1m30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
+    environment:
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}   
+     #entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
-     - 8761:8761
+      - 8761:8761
+    restart: unless-stopped
+    networks:
+      - petclinic_network
+    links:
+      - config-server
 
   customers-service:
-    image: springcommunity/spring-petclinic-cloud-customers-service
+    image: superbero/spring-petclinic-cloud-customers-service:latest
     container_name: customers-service
-    mem_limit: 512M
+    environment:
+      - JAVA_TOOL_OPTIONS= ${JAVA_TOOL_OPTIONS}
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
     - 8081:8081
-
+    restart: unless-stopped
+    networks:
+      - petclinic_network
+  
   visits-service:
-    image: springcommunity/spring-petclinic-cloud-visits-service
+    image: superbero/spring-petclinic-cloud-visits-service:latest
     container_name: visits-service
-    mem_limit: 512M
+    #mem_limit: 512M
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    #entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
      - 8082:8082
+    networks:
+      - petclinic_network
 
   vets-service:
-    image: springcommunity/spring-petclinic-cloud-vets-service
+    image: superbero/spring-petclinic-cloud-vets-service:latest
     container_name: vets-service
-    mem_limit: 512M
+    #mem_limit: 512M
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    #entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
      - 8083:8083
+    networks:
+      - petclinic_network
 
   api-gateway:
-    image: springcommunity/spring-petclinic-cloud-api-gateway
+    image: superbero/spring-petclinic-cloud-api-gateway:latest
     container_name: api-gateway
     mem_limit: 512M
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    #entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
      - 8080:8080
+    networks:
+      - petclinic_network
 
   tracing-server:
     image: openzipkin/zipkin
     container_name: tracing-server
-    mem_limit: 512M
+    #mem_limit: 512M
     environment:
     - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
     ports:
      - 9411:9411
+    networks:
+      - petclinic_network
 
   admin-server:
-    image: springcommunity/spring-petclinic-cloud-admin-server
+    image: superbero/spring-petclinic-cloud-admin-server:latest
     container_name: admin-server
-    mem_limit: 512M
+    #mem_limit: 512M
+    environment:
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    #entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
      - 9090:9090
+    networks:
+      - petclinic_network
 
   ## Grafana / Prometheus
 
@@ -90,6 +122,8 @@ services:
     mem_limit: 256M
     ports:
     - 3000:3000
+    networks:
+      - petclinic_network
 
   prometheus-server:
     build: ./docker/prometheus
@@ -97,3 +131,9 @@ services:
     mem_limit: 256M
     ports:
     - 9091:9090
+    networks:
+      - petclinic_network
+
+networks:
+  petclinic_network:
+    driver: bridge

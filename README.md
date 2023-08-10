@@ -171,10 +171,10 @@ You should now have all your images in your Docker registry. It might be good to
 
 Make sure you're targeting your Kubernetes cluster.
 
-Docker images for kubernetes have been published into DockerHub in the [springcommunity](https://hub.docker.com/u/springcommunity)
+Docker images for kubernetes have been published into DockerHub in the [superbero](https://hub.docker.com/u/superbero)
 organization. You can pull an image:
 ```
-docker pull springcommunity/spring-petclinic-cloud-discovery-service
+docker pull superbero/spring-petclinic-cloud-discovery-service
 ```
 
 ### Setting things up in Kubernetes
