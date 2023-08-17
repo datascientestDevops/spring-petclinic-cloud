@@ -18,14 +18,15 @@ services:
     #mem_limit: 1G
     depends_on:
       - config-server
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost"]
-    #   interval: 1m30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 40s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:8888"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     environment:
-      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}   
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
+      - spring.config.import=configserver:http://config-server:8888 
      #entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
       - 8761:8761
@@ -78,7 +79,7 @@ services:
   api-gateway:
     image: superbero/spring-petclinic-cloud-api-gateway:latest
     container_name: api-gateway
-    mem_limit: 512M
+    #mem_limit: 512M
     depends_on:
      - config-server
      - discovery-server
@@ -105,6 +106,7 @@ services:
     #mem_limit: 512M
     environment:
       - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
+      - spring.config.import=configserver:http://config-server:8888
     depends_on:
      - config-server
      - discovery-server
@@ -113,6 +115,7 @@ services:
      - 9090:9090
     networks:
       - petclinic_network
+    restart: unless-stopped
 
   ## Grafana / Prometheus
 
