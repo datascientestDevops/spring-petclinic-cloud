@@ -18,34 +18,34 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
-      - mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=$REPOSITORY_URI
+      #- mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=$REPOSITORY_URI
      
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
+      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
 
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
+      #- echo Build completed on `date`
+      #- echo Pushing the Docker images...
       
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG      
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest
-      - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
-      - echo Build completed on `date`
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG      
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest
+      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
+      #- echo Build completed on `date`
   post_build:
     commands:
       - echo update cluster kubernetes...
