@@ -5,7 +5,7 @@ metadata: #Metadata du deployement
   labels:
     app: api-gateway
   name: api-gateway
-  namespace: spring-petclinic-dev
+  namespace: spring-petclinic
 spec:
   replicas: 1
   selector:
@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         env: #variables d'environeement
         - name: SPRING_PROFILES_ACTIVE
-          value: kubernetes,mysql
+          value: kubernetes
 #        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
 #          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
         ports:
@@ -37,7 +37,7 @@ metadata: #Configuration des metadata
   labels:
     app: api-gateway
   name: api-gateway
-  namespace: spring-petclinic-dev
+  namespace: spring-petclinic
 spec:
   ports: # Exposition des port d'entré et de sortie
   - name: "http"

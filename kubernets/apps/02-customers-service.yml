@@ -6,7 +6,7 @@ metadata:
   labels:
     app: customers-service
   name: customers-service
-  namespace: spring-petclinic-dev
+  namespace: spring-petclinic
 spec:
   replicas: 1
   selector:
@@ -24,13 +24,13 @@ spec:
         imagePullPolicy: Always
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: kubernetes,mysql
+          value: kubernetes
         - name: SPRING_DATASOURCE_URL
           value: jdbc:mysql://customer-db.chte3d0ognif.eu-west-3.rds.amazonaws.com:3306
         - name: SPRING_DATASOURCE_USERNAME
-          value: root
+          value: datascientest
         - name: SPRING_DATASOURCE_PASSWORD
-          value: datascientest_petclinic
+          value: datascientest
 #        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
 #          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
         ports:
@@ -47,7 +47,7 @@ metadata:
   labels:
     app: customers-service
   name: customers-service
-  namespace: spring-petclinic-dev
+  namespace: spring-petclinic
 spec:
   type: ClusterIP
   ports:

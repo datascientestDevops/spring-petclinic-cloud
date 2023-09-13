@@ -3,6 +3,12 @@ version: 0.2
 phases:
   install:
     java: 11
+    commands:
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.4/2023-08-16/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+      - echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+      - kubectl version --short --client
   pre_build:
     on-failure: ABORT
     commands:
@@ -48,16 +54,17 @@ phases:
       #- echo Build completed on `date`
   post_build:
     commands:
-      - echo update cluster kubernetes...
-      - echo Update kube config
-      - aws update config eu-west-3
+      - echo Update kube configg
       - aws eks update-kubeconfig --region eu-west-3 --name petclinic-eks-cluster
-      - echo Deploy to Eks
+      - echo update cluster kubernets...
+      - kubectl get all -n spring-petclinic
       - echo apply namespace
-      - kubectl apply -f kubernetes/namespace.yaml
-      - echo Apply Deployment
-      - kubectl replace -f kubernetes/deployement/ --force
-      - echo Apply Services
-      - kubectl replace -f kubernetes/services/ --force
+      - kubectl replace -f kubernets/namespace.yml
+      - echo update config map
+      - kubectl replace -f kubernets/config-map.yml
+      - echo update role
+      - kubectl replace -f kubernets/role.yml
+      - echo Apply Apps
+      - kubectl replace -f kubernets/apps/
 
 
