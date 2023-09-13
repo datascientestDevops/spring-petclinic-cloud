@@ -1,8 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    REPOSITORY_PREFIX: harbor.myregistry.com/demo
 phases:
   install:
     java: 11
@@ -12,11 +9,11 @@ phases:
       - REPOSITORY_URI=484497069811.dkr.ecr.eu-west-3.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+      #- echo "Build Test with maven"
+      #- mvn -B package --file pom.xml
   build:
     on-failure: ABORT
     commands:
-      - echo "Build Test with maven"
-      #- mvn -B package --file pom.xml
       - echo "Build all docker image"
       - echo Logging in to Amazon ECR...
       - aws --version
@@ -30,8 +27,7 @@ phases:
       - docker tag $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
       - docker tag $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
       - docker tag $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
-  post_build:
-    commands:
+
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       
@@ -49,3 +45,18 @@ phases:
       - docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
       - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest
       - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
+      - echo Build completed on `date`
+  post_build:
+    commands:
+      - echo update cluster kubernetes...
+      - echo Update kube config
+      - aws eks update-kubeconfig --region eu-west-3 --name petclinic-eks-cluster
+      - echo Deploy to Eks
+      - echo apply namespace
+      - kubectl apply -f kubernetes/namespace.yaml
+      - echo Apply Deployment
+      - kubectl replace -f kubernetes/deployement/ --force
+      - echo Apply Services
+      - kubectl replace -f kubernetes/services/ --force
+
+

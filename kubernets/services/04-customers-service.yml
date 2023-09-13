@@ -1,0 +1,20 @@
+---
+#Le service ClusterIP est le type par défaut au sein de Kubernetes
+#Il reçoit une adresse IP interne au cluster, ce qui rend ses Pods uniquement accessibles depuis le cluster
+#Ce service doit juste est accessible par l'API
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: customers-service
+  name: customers-service
+  namespace: spring-petclinic-dev
+spec:
+  ports:
+  - name: "http"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: customers-service
+status:
+  loadBalancer: {}
