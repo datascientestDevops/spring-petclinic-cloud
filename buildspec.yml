@@ -50,6 +50,7 @@ phases:
     commands:
       - echo update cluster kubernetes...
       - echo Update kube config
+      - aws update config eu-west-3
       - aws eks update-kubeconfig --region eu-west-3 --name petclinic-eks-cluster
       - echo Deploy to Eks
       - echo apply namespace
