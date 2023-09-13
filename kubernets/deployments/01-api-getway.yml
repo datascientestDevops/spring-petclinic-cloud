@@ -21,27 +21,6 @@ spec:
       - image: 484497069811.dkr.ecr.eu-west-3.amazonaws.com/spring-petclinic-cloud-api-gateway:latest
         name: api-gateway
         imagePullPolicy: Always
-#        livenessProbe: #: Cela implique d'envoyer une requête HTTP à un point de terminaison spécifique du conteneur et d'évaluer la réponse reçue (par exemple, vérifier si le code de réponse est 200 OK).
-#          httpGet:
-#            port: 8080
-#            path: /actuator/health/liveness
-#          initialDelaySeconds: 90
-#          periodSeconds: 5
-#        readinessProbe: #il vérifie si un conteneur est en mesure de servir des requêtes et de participer au trafic sans rencontrer de problèmes.
-#          httpGet:
-#            port: 8080
-#            path: /actuator/health/readiness
-#          initialDelaySeconds: 15
-        lifecycle: #référence aux actions et aux étapes de vie liées à la création, la mise à jour et la destruction des conteneurs au sein d'un pod
-          preStop: #Just avant de fermer
-            exec:
-              command: ["sh", "-c", "sleep 10"]
-        resources: # configuration des ressources
-          limits:
-            memory: 1Gi
-          requests:
-            cpu: 1000m
-            memory: 1Gi
         env: #variables d'environeement
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes,mysql
@@ -51,3 +30,21 @@ spec:
         - containerPort: 8080 
       restartPolicy: Always
 status: {}
+---
+apiVersion: v1
+kind: Service #type 
+metadata: #Configuration des metadata
+  labels:
+    app: api-gateway
+  name: api-gateway
+  namespace: spring-petclinic-dev
+spec:
+  ports: # Exposition des port d'entré et de sortie
+  - name: "http"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: api-gateway
+  type: LoadBalancer #Un service de type LoadBalancer est basé sur le service NodePort et ajoute la possibilité de configurer des équilibreurs de charge externes au sein des clouds publics et privés. Il expose les services exécutés au sein du cluster en transférant le trafic réseau vers les nœuds du cluster.
+status:
+  loadBalancer: {}
