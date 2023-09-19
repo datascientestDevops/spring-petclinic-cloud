@@ -24,27 +24,26 @@ spec:
         env: #variables d'environeement
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes
-#        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
-#          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        #- name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+        #  value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
         ports:
         - containerPort: 8080 
       restartPolicy: Always
 status: {}
 ---
 apiVersion: v1
-kind: Service #type 
-metadata: #Configuration des metadata
+kind: Service
+metadata:
   labels:
     app: api-gateway
   name: api-gateway
   namespace: spring-petclinic
 spec:
-  ports: # Exposition des port d'entré et de sortie
-  - name: "http"
-    port: 8080
-    targetPort: 8080
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
   selector:
     app: api-gateway
-  type: LoadBalancer #Un service de type LoadBalancer est basé sur le service NodePort et ajoute la possibilité de configurer des équilibreurs de charge externes au sein des clouds publics et privés. Il expose les services exécutés au sein du cluster en transférant le trafic réseau vers les nœuds du cluster.
-status:
-  loadBalancer: {}
+

@@ -13,58 +13,49 @@ phases:
     on-failure: ABORT
     commands:
       - REPOSITORY_URI=484497069811.dkr.ecr.eu-west-3.amazonaws.com
+      - AWS_REGION=eu-west-3
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-      #- echo "Build Test with maven"
-      #- mvn -B package --file pom.xml
+      - echo "Build Test with maven"
+      - mvn -B package --file pom.xml
   build:
     on-failure: ABORT
     commands:
       - echo "Build all docker image"
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
-      #- mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=$REPOSITORY_URI
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=$REPOSITORY_URI
      
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
-      #- docker tag $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
 
-      #- echo Build completed on `date`
-      #- echo Pushing the Docker images...
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
       
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG      
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest
-      #- docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
-      #- echo Build completed on `date`
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-api-gateway:$IMAGE_TAG
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-visits-service:$IMAGE_TAG
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-vets-service:$IMAGE_TAG
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-customers-service:$IMAGE_TAG      
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-admin-server:$IMAGE_TAG
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-discovery-service:$IMAGE_TAG
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:latest
+      - docker push $REPOSITORY_URI/spring-petclinic-cloud-config-server:$IMAGE_TAG
+      - echo Build completed on `date`
   post_build:
     commands:
       - echo Update kube configg
-      - aws eks update-kubeconfig --region eu-west-3 --name petclinic-eks-cluster
-      - echo update cluster kubernets...
-      - kubectl get all -n spring-petclinic
-      - echo apply namespace
-      - kubectl replace -f kubernets/namespace.yml
-      - echo update config map
-      - kubectl replace -f kubernets/config-map.yml
-      - echo update role
-      - kubectl replace -f kubernets/role.yml
-      - echo Apply Apps
-      - kubectl replace -f kubernets/apps/
+      - sh kubernetes/eks_update.sh
 
 

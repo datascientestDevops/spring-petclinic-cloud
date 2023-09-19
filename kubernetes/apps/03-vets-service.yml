@@ -30,10 +30,10 @@ spec:
           value: datascientest
         - name: SPRING_DATASOURCE_PASSWORD
           value: datascientest
-#        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
-#          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        #- name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+        #  value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
         ports:
-        - containerPort: 8083
+        - containerPort: 8080
       restartPolicy: Always
 status: {}
 ---
@@ -52,7 +52,7 @@ spec:
   ports:
   - name: "http"
     protocol: TCP
-    port: 8083
-    targetPort: 8083
+    port: 8080
+    targetPort: 8080
   selector:
     app: vets-service

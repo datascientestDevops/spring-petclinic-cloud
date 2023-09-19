@@ -52,8 +52,8 @@ data:
           wavefront:
             enabled: false
 
-    customers-service-id: http://customers-service.spring-petclinic.svc.cluster.local:8081
-    visits-service-id: http://visits-service.spring-petclinic.svc.cluster.local:8082
+    customers-service-id: http://customers-service.spring-petclinic.svc.cluster.local:8080
+    visits-service-id: http://visits-service.spring-petclinic.svc.cluster.local:8080
 
     spring:
       datasource:
@@ -83,7 +83,7 @@ data:
             enabled: true
         loadbalancer:
           ribbon:
-            enabled: false
+            enabled: true
         gateway:
           x-forwarded:  
             enabled: true 
@@ -94,19 +94,19 @@ data:
             proto-append: false
           routes:
             - id: vets-service
-              uri: http://vets-service.spring-petclinic.svc.cluster.local:8083
+              uri: http://vets-service.spring-petclinic.svc.cluster.local:8080
               predicates:
                 - Path=/api/vet/**
               filters:
                 - StripPrefix=2
             - id: visits-service
-              uri: http://visits-service.spring-petclinic.svc.cluster.local:8082
+              uri: http://visits-service.spring-petclinic.svc.cluster.local:8080
               predicates:
                 - Path=/api/visit/**
               filters:
                 - StripPrefix=2
             - id: customers-service
-              uri: http://customers-service.spring-petclinic.svc.cluster.local:8081
+              uri: http://customers-service.spring-petclinic.svc.cluster.local:8080
               predicates:
                 - Path=/api/customer/**
               filters:

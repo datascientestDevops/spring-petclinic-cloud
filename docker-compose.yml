@@ -27,7 +27,7 @@ services:
      - discovery-server
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
-    - 8081:8081
+    - 8080:8080
 
   visits-service:
     image: springcommunity/spring-petclinic-cloud-visits-service
@@ -38,7 +38,7 @@ services:
      - discovery-server
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
-     - 8082:8082
+     - 8080:8080
 
   vets-service:
     image: springcommunity/spring-petclinic-cloud-vets-service
@@ -49,7 +49,7 @@ services:
      - discovery-server
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
-     - 8083:8083
+     - 8080:8080
 
   api-gateway:
     image: springcommunity/spring-petclinic-cloud-api-gateway

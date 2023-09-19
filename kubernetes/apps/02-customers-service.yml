@@ -2,38 +2,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
   labels:
-    app: visits-service
-  name: visits-service
+    app: customers-service
+  name: customers-service
   namespace: spring-petclinic
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: visits-service
+      app: customers-service
   strategy: {}
   template:
     metadata:
       labels:
-        app: visits-service
+        app: customers-service
     spec:
       containers:
-      - image: 484497069811.dkr.ecr.eu-west-3.amazonaws.com/spring-petclinic-cloud-visits-service:latest
-        name: visits-service
+      - image: 484497069811.dkr.ecr.eu-west-3.amazonaws.com/spring-petclinic-cloud-customers-service:latest
+        name: customers-service
         imagePullPolicy: Always
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes
         - name: SPRING_DATASOURCE_URL
-          value: jdbc:mysql://visit-db.chte3d0ognif.eu-west-3.rds.amazonaws.com:3306
+          value: jdbc:mysql://customer-db.chte3d0ognif.eu-west-3.rds.amazonaws.com:3306
         - name: SPRING_DATASOURCE_USERNAME
           value: datascientest
         - name: SPRING_DATASOURCE_PASSWORD
           value: datascientest
-#        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
-#          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        #- name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+        #  value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
         ports:
-        - containerPort: 8082
+        - containerPort: 8080
       restartPolicy: Always
 status: {}
 ---
@@ -44,15 +45,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: visits-service
-  name: visits-service
-  namespace: spring-petclinic  
+    app: customers-service
+  name: customers-service
+  namespace: spring-petclinic
 spec:
   type: ClusterIP
   ports:
   - name: "http"
-    port: 8082
-    targetPort: 8082
     protocol: TCP
+    port: 8080
+    targetPort: 8080
   selector:
-    app: visits-service
+    app: customers-service
