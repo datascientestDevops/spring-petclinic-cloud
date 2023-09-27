@@ -6,8 +6,8 @@ metadata:
   annotations: 
     alb.ingress.kubernetes.io/scheme: internet-facing
 #    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-3:484497069811:certificate/3a9dd5ff-556f-49b1-a6af-1cdf7b94bb00
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/subnets: subnet-06fcdcf5fca7f545d, subnet-050925e3ff30021a9
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/subnets: subnet-0c48cc3bf757de2bd, subnet-05fb8438a60cb532b
     kubernetes.io/ingress.class: alb
   labels:
     app: api-gateway
@@ -35,7 +35,7 @@ metadata:
   annotations: 
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/subnets: subnet-06fcdcf5fca7f545d, subnet-050925e3ff30021a9
+    alb.ingress.kubernetes.io/subnets: subnet-0c48cc3bf757de2bd, subnet-05fb8438a60cb532b
     kubernetes.io/ingress.class: alb
   labels:
     app.kubernetes.io/instance: prometheus

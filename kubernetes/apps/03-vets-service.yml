@@ -25,7 +25,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes
         - name: SPRING_DATASOURCE_URL
-          value: jdbc:mysql://vet-db.chte3d0ognif.eu-west-3.rds.amazonaws.com:3306
+          value: jdbc:mysql://vet-db.chte3d0ognif.eu-west-3.rds.amazonaws.com:3306/service_instance_db
         - name: SPRING_DATASOURCE_USERNAME
           value: datascientest
         - name: SPRING_DATASOURCE_PASSWORD

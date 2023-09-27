@@ -17,7 +17,6 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - echo "Build Test with maven"
-      - mvn -B package --file pom.xml
   build:
     on-failure: ABORT
     commands:
