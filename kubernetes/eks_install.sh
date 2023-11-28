@@ -23,7 +23,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
     --namespace monitoring  \
     --create-namespace \
     --set grafana.service.type=NodePort \
-    --set promotheus.service.type=NodePort \
+    --set prometheus.service.type=NodePort \
 
 sleep 60
 
